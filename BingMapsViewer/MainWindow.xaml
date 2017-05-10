@@ -1,10 +1,10 @@
-﻿<Window x:Class="GMapsViewer.MainWindow"
+﻿<Window x:Class="BingMapsViewer.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:m="clr-namespace:Microsoft.Maps.MapControl.WPF;assembly=Microsoft.Maps.MapControl.WPF"
-        xmlns:local="clr-namespace:GMapsViewer"
+        xmlns:local="clr-namespace:BingMapsViewer"
         mc:Ignorable="d"
         Title="MainWindow" Height="700" Width="1000" WindowStartupLocation="CenterScreen">
     <Grid x:Name="MainGrid">
@@ -12,7 +12,10 @@
             <RowDefinition Height="*" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
-        <m:Map x:Name="MapsControl" Grid.Row="0" Height="Auto" Width="Auto" CredentialsProvider="AmDlMovfPdvJd1qNUk753BCOYUjvx0_HiJdsswvp3rIKc75bsKdcaNNXoAmSvFUi"/>
+        <m:Map x:Name="MapsControl" Center="55.732627, 12.342962" ZoomLevel="15" Mode="Road" Grid.Row="0" Height="Auto" Width="Auto" CredentialsProvider="AmDlMovfPdvJd1qNUk753BCOYUjvx0_HiJdsswvp3rIKc75bsKdcaNNXoAmSvFUi">
+            <m:Pushpin Location="55.732627, 12.342962"/>
+        </m:Map>
+        
         <Button x:Name="HtmlImportBtn" Content="Import HTML" Width="100" Height="24" Margin="5" Grid.Row="1" />
     </Grid>
 </Window>
