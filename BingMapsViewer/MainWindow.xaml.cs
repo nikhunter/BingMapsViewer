@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -13,21 +14,28 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using Microsoft.Maps.MapControl.WPF;
+using Json;
 
-namespace BingMapsViewer {
+namespace BingMapsViewer
+{
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window {
-        public MainWindow() {
-            InitializeComponent();
-        }
+    public partial class MainWindow : Window
+    {
+        public ObservableCollection<Datapoint> PushPinCollection = new ObservableCollection<Datapoint>();
 
-        private void Pushpin_MouseLeftButtonUp(object sender, MouseButtonEventArgs e) {
-            var frameworkElement = sender as FrameworkElement;
-            if (frameworkElement != null) {
-                var clickedResult = frameworkElement.DataContext;
-            }
+        public MainWindow()
+        {
+            InitializeComponent();
+
+            PushPinCollection.Add(new Datapoint(
+                new Location(55.732627, 12.342962),
+                DateTime.Now,
+                60,
+                4,
+                3000
+                ));
         }
     }
 }
