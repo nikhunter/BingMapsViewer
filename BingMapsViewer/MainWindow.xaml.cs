@@ -14,16 +14,20 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using Microsoft.Maps.MapControl.WPF;
 
-namespace BingMapsViewer
-{
+namespace BingMapsViewer {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window
-    {
-        public MainWindow()
-        {
+    public partial class MainWindow : Window {
+        public MainWindow() {
             InitializeComponent();
+        }
+
+        private void Pushpin_MouseLeftButtonUp(object sender, MouseButtonEventArgs e) {
+            var frameworkElement = sender as FrameworkElement;
+            if (frameworkElement != null) {
+                var clickedResult = frameworkElement.DataContext;
+            }
         }
     }
 }
