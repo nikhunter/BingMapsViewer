@@ -31,23 +31,50 @@ namespace BingMapsViewer {
                 new FrameworkPropertyMetadata(Int32.MaxValue));
 
             PushPinCollection.Add(new Datapoint(
-                new Location(55.732627, 12.342962),
+                new Location(55.732283, 12.343685),
                 DateTime.Now.Date.ToString("d", CultureInfo.InvariantCulture),
                 DateTime.Now.ToString("hh:mm:ss", CultureInfo.InvariantCulture),
-                60,
-                4,
-                3000
+                0,
+                0,
+                800
             ));
+
+            PushPinCollection.Add(new Datapoint(
+                new Location(55.731998, 12.343775),
+                DateTime.Now.Date.ToString("d", CultureInfo.InvariantCulture),
+                DateTime.Now.ToString("hh:mm:ss", CultureInfo.InvariantCulture),
+                30,
+                2,
+                2500
+            ));
+
+            PushPinCollection.Add(new Datapoint(
+                new Location(55.732018, 12.344381),
+                DateTime.Now.Date.ToString("d", CultureInfo.InvariantCulture),
+                DateTime.Now.ToString("hh:mm:ss", CultureInfo.InvariantCulture),
+                10,
+                1,
+                1000
+            ));
+
+            for (int count = 0; count < PushPinCollection.Count - 1; count++) {
+                DrawLine(PushPinCollection[count].Location, PushPinCollection[count + 1].Location);
+            }
         }
 
-        private void Pushpin_MouseLeftButtonUp(object sender, MouseButtonEventArgs e) {
-            // Get a reference to the object that was clicked.
-            var frameworkElement = sender as FrameworkElement;
-            if (frameworkElement != null) {
-                var clickedSearchResult = frameworkElement.DataContext;
+        private void DrawLine(Location oldPin, Location newPin) {
+            MapPolyline polyLine = new MapPolyline();
+            SolidColorBrush colourBrush = new SolidColorBrush();
+            colourBrush.Color = Color.FromRgb(232, 123, 45);
+            polyLine.Stroke = colourBrush;
+            polyLine.StrokeThickness = 3;
+            polyLine.Opacity = 0.8;
+            polyLine.Locations = new LocationCollection {
+                oldPin,
+                newPin
+            };
 
-                // Do something with it.
-            }
+            Map.Children.Add(polyLine);
         }
 
         private void ImportBtn_OnClick(object sender, RoutedEventArgs e) {
