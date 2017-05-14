@@ -1,29 +1,17 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Globalization;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using Microsoft.Maps.MapControl.WPF;
-using Json;
 using Microsoft.Win32;
 
 namespace BingMapsViewer {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window {
+    public partial class MainWindow {
         public static ObservableCollection<Datapoint> PushPinCollection { get; set; } =
             new ObservableCollection<Datapoint>();
 
@@ -31,33 +19,6 @@ namespace BingMapsViewer {
             InitializeComponent();
             ToolTipService.ShowDurationProperty.OverrideMetadata(typeof(DependencyObject),
                 new FrameworkPropertyMetadata(Int32.MaxValue));
-
-            PushPinCollection.Add(new Datapoint(
-                new Location(55.732283, 12.343685),
-                DateTime.Now.Date.ToString("d", CultureInfo.InvariantCulture),
-                DateTime.Now.ToString("hh:mm:ss", CultureInfo.InvariantCulture),
-                0,
-                0,
-                800
-            ));
-
-            PushPinCollection.Add(new Datapoint(
-                new Location(55.731998, 12.343775),
-                DateTime.Now.Date.ToString("d", CultureInfo.InvariantCulture),
-                DateTime.Now.ToString("hh:mm:ss", CultureInfo.InvariantCulture),
-                30,
-                2,
-                2500
-            ));
-
-            PushPinCollection.Add(new Datapoint(
-                new Location(55.732018, 12.344381),
-                DateTime.Now.Date.ToString("d", CultureInfo.InvariantCulture),
-                DateTime.Now.ToString("hh:mm:ss", CultureInfo.InvariantCulture),
-                10,
-                1,
-                1000
-            ));
 
             for (int count = 0; count < PushPinCollection.Count - 1; count++) {
                 DrawLine(PushPinCollection[count].Location, PushPinCollection[count + 1].Location);
@@ -100,71 +61,71 @@ namespace BingMapsViewer {
             if (result != false) {
                 ImportData(ofd.FileName, 20);
             }
-
-            
         }
 
-        class DATA {
-            public static string RPM => "10C";
-            public static string SPEED => "10D";
-            public static string LAT => "A";
-            public static string LNG => "B";
+        public class Data {
+            // TODO Make Date and Time variables
+            public static string Rpm => "10C";
+            public static string Speed => "10D";
+            public static string Lat => "A";
+            public static string Lng => "B";
         }
 
         private void ImportData(string file, int skip) {
             var lines = File.ReadAllLines(file);
-            var skipCount = 0;
+            var skipCount = 0; // TODO Replace with something that checks that current extract is more then X, X(lat, lng)+% away
             for (var i = 0; i <= lines.Length;) {
                 var data = lines[i].Split(',');
-                if (data[1] == DATA.RPM) {
+                if (data[1] == Data.Rpm) {
                     var count = 1;
 
+                    // TODO Make Date and Time variables
                     var rpm = int.Parse(data[2]);
                     var speed = 0;
                     double lat = 0;
                     double lng = 0;
 
-
                     try {
-                        while (lines[i + count].Split(',')[1] != DATA.RPM)
-                        {
+                        // TODO Extract Date and Time
+                        while (lines[i + count].Split(',')[1] != Data.Rpm) {
                             data = lines[i + count].Split(',');
 
-                            if (data[1] == DATA.SPEED)
-                            {
+                            if (data[1] == Data.Speed) {
                                 speed = int.Parse(data[2]);
                             }
-                            else if (data[1] == DATA.LAT)
-                            {
+                            else if (data[1] == Data.Lat) {
                                 lat = double.Parse(data[2].Insert(2, ","));
                             }
-                            else if (data[1] == DATA.LNG)
-                            {
+                            else if (data[1] == Data.Lng) {
                                 lng = double.Parse(data[2].Insert(2, ","));
                             }
 
                             count++;
                         }
                     }
-                    catch (IndexOutOfRangeException e) {
+                    catch (IndexOutOfRangeException) {
                         // import is probably at the end of the file, so we escape the loop here
                         break;
                     }
 
-                    //TODO Fix this douple if thing, it didn't work for me
+                    if (lng != 0 && lat != 0) {
+                        if (skipCount == 0) {
+                            if (PushPinCollection.Count > 0) {
+                                DrawLine(PushPinCollection[PushPinCollection.Count - 1].Location,
+                                    new Location(lat, lng));
+                            }
 
-                    if (lng != 0) {
-                        if (lat != 0) {
-                            if (skipCount == 0) {
-                                PushPinCollection.Add(
-                                    new Datapoint(new Location(lat, lng), "TEST", "TEST", speed, 0, rpm));
-                                skipCount++;
-                            }else if (skipCount >= skip) {
-                                skipCount = 0;
-                            }
-                            else {
-                                skipCount++;
-                            }
+                            // TODO Check that Latitude and Longitude is within a certain distance from the previous pin
+                            PushPinCollection.Add(
+                                new Datapoint(new Location(lat, lng), "TEST", "TEST", speed, rpm));
+
+                            skipCount++;
+                        }
+                        else if (skipCount >= skip) {
+                            skipCount = 0;
+                        }
+                        else {
+                            skipCount++;
                         }
                     }
 
@@ -174,6 +135,7 @@ namespace BingMapsViewer {
         }
 
         private void ClearBtn_OnClick(object sender, RoutedEventArgs e) {
+            // TODO Clear MapPolyLine from Map (Map.Children.Clear breaks PushPinCollection binding)
             PushPinCollection.Clear();
         }
 

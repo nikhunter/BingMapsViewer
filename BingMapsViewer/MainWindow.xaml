@@ -28,7 +28,6 @@
                                             <RowDefinition Height="Auto"/>
                                             <RowDefinition Height="Auto"/>
                                             <RowDefinition Height="Auto"/>
-                                            <RowDefinition Height="Auto"/>
                                         </Grid.RowDefinitions>
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition Width="Auto"/>
@@ -49,9 +48,6 @@
                                         
                                         <TextBlock Text="RPM:&#x09;" Grid.Row="3" Grid.Column="0" Foreground="White" HorizontalAlignment="Left"/>
                                         <TextBlock Text="{Binding Rpm}" Grid.Row="3" Grid.Column="1" Foreground="White" HorizontalAlignment="Left" />
-                                        
-                                        <TextBlock Text="Gear:&#x09;" Grid.Row="4" Grid.Column="0" Foreground="White" HorizontalAlignment="Left"/>
-                                        <TextBlock Text="{Binding Gear}" Grid.Row="4" Grid.Column="1" Foreground="White" HorizontalAlignment="Left" />
                                     </Grid>
                                 </ContentPresenter.Content>
                             </ContentPresenter>
