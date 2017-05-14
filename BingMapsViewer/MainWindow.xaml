@@ -4,9 +4,9 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:m="clr-namespace:Microsoft.Maps.MapControl.WPF;assembly=Microsoft.Maps.MapControl.WPF"
-        xmlns:local="clr-namespace:BingMapsViewer"
+        xmlns:local="clr-namespace:BingMapsViewer" Icon="Resources/map-icon.jpg"
         mc:Ignorable="d" DataContext="{Binding RelativeSource={RelativeSource Self}}"
-        Title="GPS Logger" Height="900" Width="1600" WindowStartupLocation="CenterScreen">
+        Title="Route Viewer" Height="900" Width="1600" WindowStartupLocation="CenterScreen">
     
     <Window.Resources>
         <Style x:Key="PushPinToolTipStyle" TargetType="ToolTip">
@@ -72,11 +72,11 @@
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
 
-        <m:Map x:Name="MapsControl" Center="55.732627, 12.342962" ZoomLevel="15" Mode="Road" Grid.Row="0" Grid.Column="1" Height="Auto" Width="Auto" CredentialsProvider="AmDlMovfPdvJd1qNUk753BCOYUjvx0_HiJdsswvp3rIKc75bsKdcaNNXoAmSvFUi">
+        <m:Map x:Name="Map" Center="55.732627, 12.342962" ZoomLevel="15" Mode="Road" Grid.Row="0" Grid.Column="1" Height="Auto" Width="Auto" CredentialsProvider="AmDlMovfPdvJd1qNUk753BCOYUjvx0_HiJdsswvp3rIKc75bsKdcaNNXoAmSvFUi">
             <m:MapItemsControl ItemsSource="{Binding PushPinCollection}">
                 <m:MapItemsControl.ItemTemplate>
                     <DataTemplate>
-                        <m:Pushpin Location="{Binding Location}" Cursor="Hand" MouseLeftButtonUp="Pushpin_MouseLeftButtonUp">
+                        <m:Pushpin Location="{Binding Location}" Cursor="Hand">
                             <ToolTipService.ToolTip>
                                 <ToolTip Style="{StaticResource PushPinToolTipStyle}"/>
                             </ToolTipService.ToolTip>
