@@ -91,17 +91,17 @@ namespace BingMapsViewer {
         */
 
         private void ImportBtn_OnClick(object sender, RoutedEventArgs e) {
-            /*var ofd = new OpenFileDialog {
-                Filter = "CSV Files (*.CSV)|All Files (*.*)"
+            var ofd = new OpenFileDialog {
+                Filter = "CSV Files (*.csv)|*.csv|All Files (*.*)|*.*"
             };
 
             var result = ofd.ShowDialog();
 
             if (result != false) {
-                ImportData(ofd.FileName);
-            }*/
+                ImportData(ofd.FileName, 20);
+            }
 
-            ImportData("C:\\Users\\Cosmo\\Downloads\\DAT00004.CSV");
+            
         }
 
         class DATA {
@@ -111,8 +111,9 @@ namespace BingMapsViewer {
             public static string LNG => "B";
         }
 
-        private void ImportData(string file) {
+        private void ImportData(string file, int skip) {
             var lines = File.ReadAllLines(file);
+            var skipCount = 0;
             for (var i = 0; i <= lines.Length;) {
                 var data = lines[i].Split(',');
                 if (data[1] == DATA.RPM) {
@@ -124,29 +125,50 @@ namespace BingMapsViewer {
                     double lng = 0;
 
 
-                    while (lines[i + count].Split(',')[1] != DATA.RPM) {
-                        data = lines[i + count].Split(',');
+                    try {
+                        while (lines[i + count].Split(',')[1] != DATA.RPM)
+                        {
+                            data = lines[i + count].Split(',');
 
-                        if (data[1] == DATA.SPEED) {
-                            speed = int.Parse(data[2]);
-                        }
-                        else if (data[1] == DATA.LAT) {
-                            lat = double.Parse(data[2].Insert(2, "."));
-                        }
-                        else if (data[1] == DATA.LNG) {
-                            lng = double.Parse(data[2].Insert(2, "."));
-                        }
+                            if (data[1] == DATA.SPEED)
+                            {
+                                speed = int.Parse(data[2]);
+                            }
+                            else if (data[1] == DATA.LAT)
+                            {
+                                lat = double.Parse(data[2].Insert(2, ","));
+                            }
+                            else if (data[1] == DATA.LNG)
+                            {
+                                lng = double.Parse(data[2].Insert(2, ","));
+                            }
 
-                        count++;
+                            count++;
+                        }
                     }
+                    catch (IndexOutOfRangeException e) {
+                        // import is probably at the end of the file, so we escape the loop here
+                        break;
+                    }
+
+                    //TODO Fix this douple if thing, it didn't work for me
 
                     if (lng != 0) {
                         if (lat != 0) {
-                            PushPinCollection.Add(new Datapoint(new Location(lat, lng), "TEST", "TEST", speed, 0, rpm));
-                            MessageBox.Show($"rpm: {rpm}\nspeed: {speed}\nlat: {lat}\nlng: {lng}");
-                            break;
+                            if (skipCount == 0) {
+                                PushPinCollection.Add(
+                                    new Datapoint(new Location(lat, lng), "TEST", "TEST", speed, 0, rpm));
+                                skipCount++;
+                            }else if (skipCount >= skip) {
+                                skipCount = 0;
+                            }
+                            else {
+                                skipCount++;
+                            }
                         }
                     }
+
+                    i += count;
                 }
             }
         }
