@@ -22,26 +22,34 @@
                                             <RowDefinition Height="Auto"/>
                                             <RowDefinition Height="Auto"/>
                                             <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
                                         </Grid.RowDefinitions>
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition Width="Auto"/>
                                             <ColumnDefinition Width="Auto"/>
                                         </Grid.ColumnDefinitions>
 
-                                        <StackPanel Orientation="Horizontal" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" HorizontalAlignment="Center">
+                                        <StackPanel Orientation="Horizontal" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" HorizontalAlignment="Center" Margin="0,0,0,5">
                                             <TextBlock Text="{Binding Date}" Foreground="White" FontWeight="Bold" FontSize="16"/>
                                             <TextBlock Text=" - " Foreground="White" FontWeight="Bold" FontSize="16"/>
-                                            <TextBlock Text="{Binding Time}" Foreground="White" FontWeight="Bold" FontSize="16" Margin="0,0,0,5"/>
+                                            <TextBlock Text="{Binding Time}" Foreground="White" FontWeight="Bold" FontSize="16"/>
                                         </StackPanel>
                                         
-                                        <TextBlock Text="Speed:&#x09;" Grid.Row="2" Grid.Column="0" Foreground="White" HorizontalAlignment="Left"/>
-                                        <StackPanel Orientation="Horizontal" Grid.Row="2" Grid.Column="1" HorizontalAlignment="Left">
+                                        <TextBlock Text="Speed:&#x09;" Grid.Row="1" Grid.Column="0" Foreground="White" HorizontalAlignment="Left"/>
+                                        <StackPanel Orientation="Horizontal" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Left">
                                             <TextBlock Text="{Binding Speed}" Foreground="White"/>
                                             <TextBlock Text=" Km/t" Foreground="White"/>
                                         </StackPanel>
                                         
-                                        <TextBlock Text="RPM:&#x09;" Grid.Row="3" Grid.Column="0" Foreground="White" HorizontalAlignment="Left"/>
-                                        <TextBlock Text="{Binding Rpm}" Grid.Row="3" Grid.Column="1" Foreground="White" HorizontalAlignment="Left" />
+                                        <TextBlock Text="RPM:&#x09;" Grid.Row="2" Grid.Column="0" Foreground="White" HorizontalAlignment="Left"/>
+                                        <TextBlock Text="{Binding Rpm}" Grid.Row="2" Grid.Column="1" Foreground="White" HorizontalAlignment="Left" />
+
+                                        <TextBlock Text="Latitude:&#x09;" Grid.Row="3" Grid.Column="0" Foreground="White" HorizontalAlignment="Left"/>
+                                        <TextBlock Text="{Binding Location.Latitude}" Grid.Row="3" Grid.Column="1" Foreground="White"/>
+
+                                        <TextBlock Text="Longitude:&#x09;" Grid.Row="4" Grid.Column="0" Foreground="White" HorizontalAlignment="Left"/>
+                                        <TextBlock Text="{Binding Location.Longitude}" Grid.Row="4" Grid.Column="1" Foreground="White"/>
                                     </Grid>
                                 </ContentPresenter.Content>
                             </ContentPresenter>

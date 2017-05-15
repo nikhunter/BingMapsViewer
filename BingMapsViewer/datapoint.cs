@@ -7,7 +7,6 @@ namespace BingMapsViewer {
         public string Time { get; set; }
         public int Speed { get; set; }
         public int Rpm { get; set; }
-        public MapPolyline PolyLine { get; set; }
 
         public Datapoint(Location location, string date, string time, int speed, int rpm) {
             Location = location;
@@ -15,16 +14,6 @@ namespace BingMapsViewer {
             Time = time;
             Speed = speed;
             Rpm = rpm;
-        }
-
-        public Datapoint(Location location, string date, string time, int speed, int rpm, MapPolyline polyLine)
-        {
-            Location = location;
-            Date = date;
-            Time = time;
-            Speed = speed;
-            Rpm = rpm;
-            PolyLine = polyLine;
         }
     }
 }
