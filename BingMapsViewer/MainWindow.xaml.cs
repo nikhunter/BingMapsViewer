@@ -47,7 +47,6 @@ namespace BingMapsViewer {
         private void ImportBtn_OnClick(object sender, RoutedEventArgs e) {
             var ofd = new OpenFileDialog {
                 Filter = "CSV Files (*.csv)|*.csv|All Files (*.*)|*.*",
-                Multiselect = true
             };
 
             var result = ofd.ShowDialog();
@@ -55,6 +54,8 @@ namespace BingMapsViewer {
             if (result != false) {
                 ImportData(ofd.FileName);
             }
+
+            ImportBtn.IsEnabled = false;
         }
 
         /*
@@ -69,7 +70,7 @@ namespace BingMapsViewer {
         private void ImportData(string file) {
             var lines = File.ReadAllLines(file);
             var date = "";
-            for (var i = 0; i < lines.Length; i++) {
+            for (var i = 0; i < lines.Length;) {
                 var data = lines[i].Split(',');
                 if (data[1] == "10C") {
                     var count = 1;
@@ -156,6 +157,8 @@ namespace BingMapsViewer {
             PushPinCollection.Clear();
             PolyLineLayer.Children.Clear();
             Map.Children.Remove(PolyLineLayer);
+
+            ImportBtn.IsEnabled = true;
         }
 
         private void ExitBtn_OnClick(object sender, RoutedEventArgs e) {
