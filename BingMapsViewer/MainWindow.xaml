@@ -16,13 +16,7 @@
                         <Border CornerRadius="5" BorderBrush="Black" BorderThickness="2" Background="#5c87b2">
                             <ContentPresenter Margin="5">
                                 <ContentPresenter.Content>
-                                    <!--<StackPanel Margin="5" MaxWidth="400">
-                                        <TextBlock Text="{Binding Time}" FontWeight="Bold" FontSize="16" Foreground="White" TextWrapping="Wrap"/>
-                                        <TextBlock Text="{Binding Speed}" Foreground="White" TextWrapping="Wrap"/>
-                                        <TextBlock Text="{Binding Rpm}" Foreground="White" TextWrapping="Wrap"/>
-                                        <TextBlock Text="{Binding Gear}" Foreground="White" TextWrapping="Wrap"/>
-                                    </StackPanel>-->
-                                    <Grid Margin="5" MaxWidth="400">
+                                    <Grid Margin="5">
                                         <Grid.RowDefinitions>
                                             <RowDefinition Height="Auto"/>
                                             <RowDefinition Height="Auto"/>
@@ -68,7 +62,7 @@
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
 
-        <m:Map x:Name="Map" Center="55.732627, 12.342962" ZoomLevel="15" Mode="Road" Grid.Row="0" Grid.Column="1" Height="Auto" Width="Auto" CredentialsProvider="AmDlMovfPdvJd1qNUk753BCOYUjvx0_HiJdsswvp3rIKc75bsKdcaNNXoAmSvFUi">
+        <m:Map x:Name="Map" Center="55.757521, 12.421975" ZoomLevel="14" Mode="Road" Grid.Row="0" Grid.Column="1" Height="Auto" Width="Auto" CredentialsProvider="AmDlMovfPdvJd1qNUk753BCOYUjvx0_HiJdsswvp3rIKc75bsKdcaNNXoAmSvFUi">
             <m:MapItemsControl ItemsSource="{Binding PushPinCollection}">
                 <m:MapItemsControl.ItemTemplate>
                     <DataTemplate>
