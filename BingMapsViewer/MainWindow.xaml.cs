@@ -69,7 +69,7 @@ namespace BingMapsViewer {
         private void ImportData(string file) {
             var lines = File.ReadAllLines(file);
             var date = "";
-            for (var i = 0; i < lines.Length;) {
+            for (var i = 0; i < lines.Length; i++) {
                 var data = lines[i].Split(',');
                 if (data[1] == "10C") {
                     var count = 1;
@@ -130,8 +130,7 @@ namespace BingMapsViewer {
                                 new Location(lat, lng)) > 100 &&
                             CalculateDistance(PushPinCollection[PushPinCollection.Count - 1].Location,
                                 new Location(lat, lng)) < 1000) {
-                            PushPinCollection.Add(
-                                new Datapoint(new Location(lat, lng), date, time, speed, rpm));
+                            PushPinCollection.Add(new Datapoint(new Location(lat, lng), date, time, speed, rpm));
                         }
                         else if (PushPinCollection.Count == 0) {
                             PushPinCollection.Add(
