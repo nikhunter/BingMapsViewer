@@ -19,20 +19,27 @@ I nogle data typer som f.eks. Accelerometer og Gyroskop vil der kunne findes 3 v
 
 Data type er en hex kode som angiver hvilke data vi trækker ud, disse hex koder er de samme som bilens databus forstår, så denne dump er mere eller mindre en direkte dump af busdata.
 
+Standard data typer
+
 |Data Type|Data Beskrivelse|
-|---|---|
+|:---:|:---|
 |0x104|Motor stress|
 |0x105|Motor køler temperatur|
-|0x10a|Tank tryk|
-|0x10b|Køler indtag tryk|
-|0x10c|Motor RPM|
-|0x10d|Hastighed|
-|0x10e|Timing forskydning|
-|0x10f|Indtag luft temperatur|
+|0x10A|Tank tryk|
+|0x10B|Køler indtag tryk|
+|0x10C|Motor RPM|
+|0x10D|Hastighed|
+|0x10E|Timing forskydning|
+|0x10F|Indtag luft temperatur|
 |0x111|Speeder position (i procent)|
-|0x11f|Tid som motoren har kørt|
-|0x12f|Benzin niveau|
-|0x15c|Motor olie temperatur|
+|0x11F|Tid som motoren har kørt|
+|0x12F|Benzin niveau|
+|0x15C|Motor olie temperatur|
+
+Brugerdefineret data typer
+
+|Data Type|Data Beskrivelse|
+|:---:|:---|
 |0x11|UTC Dato (DDMMYY)|
 |0x10|UTC Tid (HHMMSSmm)|
 |0xA|Latitude|
@@ -44,7 +51,7 @@ Data type er en hex kode som angiver hvilke data vi trækker ud, disse hex koder
 
 Så et eksempel af log data vil se ud som efterfølgende.
 
-```markdown
+```csv
 174,10C,1095
 14,10D,0
 21,111,17
