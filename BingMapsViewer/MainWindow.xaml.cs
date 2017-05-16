@@ -68,25 +68,38 @@ namespace BingMapsViewer {
             Time    =   10
             Date    =   11
         */
-        private void ImportData(string file) {
+        private void ImportData(string file)
+        {
+            // load each file line into array as element
             var lines = File.ReadAllLines(file);
             var date = "";
-            for (var i = 0; i < lines.Length;) {
+            for (var i = 0; i < lines.Length;)
+            {
+                // splits line into array, datatype on [1], value on [2]
                 var data = lines[i].Split(',');
-                if (data[1] == "10C") {
+                if (data[1] == "10C")
+                {
+                    // Count used for running through next lines until the next 0x10c
                     var count = 1;
 
+                    // Initialization of variables used for pin information
                     var rpm = int.Parse(data[2]);
                     var speed = 0;
                     double lat = 0;
                     double lng = 0;
                     var time = "";
 
-                    try {
-                        while (lines[i + count].Split(',')[1] != "10C") {
+
+                    try
+                    {
+                        // Check if file starts by logging RPM (0x10c)
+                        while (lines[i + count].Split(',')[1] != "10C")
+                        {
                             data = lines[i + count].Split(',');
 
-                            switch (data[1]) {
+                            // Fill previously declared variables with corresponding data
+                            switch (data[1])
+                            {
                                 case "10D":
                                     speed = int.Parse(data[2]);
                                     break;
@@ -120,21 +133,29 @@ namespace BingMapsViewer {
                             count++;
                         }
                     }
-                    catch (IndexOutOfRangeException) {
+                    catch (IndexOutOfRangeException)
+                    {
                         // import is probably at the end of the file, so we escape the loop here
                         break;
                     }
 
-                    if (lng != 0 && lat != 0) {
+                    // If dataset doesn't have gps coordinates, discard it
+                    if (lng != 0 && lat != 0)
+                    {
                         // TODO Make this threshold check prettier
+
+                        // if distance is greater than 10 meter and under 1000, set a pin, otherwise it's too close or a GPS glitch
+                        // Magic numbers for now but, easily could be replaced with actual variables
                         if (PushPinCollection.Count > 0 &&
                             CalculateDistance(PushPinCollection[PushPinCollection.Count - 1].Location,
                                 new Location(lat, lng)) > 100 &&
                             CalculateDistance(PushPinCollection[PushPinCollection.Count - 1].Location,
-                                new Location(lat, lng)) < 1000) {
+                                new Location(lat, lng)) < 1000)
+                        {
                             PushPinCollection.Add(new Datapoint(new Location(lat, lng), date, time, speed, rpm));
                         }
-                        else if (PushPinCollection.Count == 0) {
+                        else if (PushPinCollection.Count == 0)
+                        {
                             PushPinCollection.Add(
                                 new Datapoint(new Location(lat, lng), date, time, speed, rpm));
                         }
