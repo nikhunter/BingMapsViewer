@@ -1,10 +1,29 @@
-Project Y
+Project Voyage
 ==============
+
 
 Hvad er det?
 -------------------
 
-Vi har bygget en OBD-II læser/logger, det består af en Arduino MEGA, et Telematics 3.5" TFT LCD touch display og en OBD-II adapter designet til Arduino boards
+Vi har købt en OBD-II læser/logger, den består af en Arduino MEGA, et Telematics 3.5" TFT LCD touch display, et OBD-II adapter stik designet til Arduino boards og en GPS(valgfrit).
+ 
+ ***(Fremover skriver vi OBD istedet for OBD-II)***
+ 
+Måden det fungerer på er at boardet får strøm fra et 12v stik som sidder i OBD stikket. 
+
+ - Trin 1: Boardet starter med tjekke om den kan læse fra OBD.
+ - Trin 2: Boardet tjekker om der er en GPS tilgængelig.
+ - Trin 3: Boardet finder alle de data typer som er tilgængelige. 
+*(Listen af data typer som den leder efter er specificeret i sketchen)*
+
+Hvis trin 1 og 3 lykkes skifter den til et nyt display hvor den løbende opdaterer informationer som den læser, såsom hastighed, RPM, motor stress, osv.
+
+Hvad er projektet?
+-------------------
+
+Vores projekt gik ud på at bygge vores egen sketch til denne enhed men da den ene af vores Arduino ikke længere gad læse fra OBD stikket turde vi ikke ødelægge den anden.
+
+Vores plan var at lave en sketch som ville tegne en analog RPM skive som man ser i instrument panelet på en bil, derefter ville vi skrive vores egen logger så vi kunne styre formatet som det skulle læses i. Da den ene Arduino ikke længere gad læse droppede vi dette og begyndte at decode den CSV log format som den medfulgte sketch allerede lavede.
 
 Hvordan er formatet?
 -------------------
