@@ -126,3 +126,6 @@ public class Datapoint {
 }
 ```
 
+Krav:
+-------------------
+Bing SDK: https://msdn.microsoft.com/da-dk/library/hh750210.aspx
