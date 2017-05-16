@@ -15,16 +15,17 @@ namespace BingMapsViewer {
     /// </summary>
     public partial class MainWindow {
         public static ObservableCollection<Datapoint> PushPinCollection { get; set; } =
-            new ObservableCollection<Datapoint>();
+            new ObservableCollection<Datapoint>(); // Collection of Map  pins, uses custom Datapoint class as type
 
-        public static MapLayer PolyLineLayer = new MapLayer();
+        public static MapLayer PolyLineLayer = new MapLayer(); // Layer used only for MapPolyLines for easier cleaning
 
         public MainWindow() {
             InitializeComponent();
             ToolTipService.ShowDurationProperty.OverrideMetadata(typeof(DependencyObject),
-                new FrameworkPropertyMetadata(Int32.MaxValue));
+                new FrameworkPropertyMetadata(Int32.MaxValue)); // Sets ToolTip duration to the max value of a long
         }
 
+        // Draws lines on the map between all pins in the PushPinCollection
         private void DrawLines() {
             if (PushPinCollection.Count > 0) {
                 for (var i = 1; i < PushPinCollection.Count; i++) {
@@ -38,12 +39,13 @@ namespace BingMapsViewer {
                         PushPinCollection[i - 1].Location,
                         PushPinCollection[i].Location
                     };
-                    PolyLineLayer.Children.Add(polyLine);
+                    PolyLineLayer.Children.Add(polyLine); // Adds a new line to the layer
                 }
             }
-            Map.Children.Add(PolyLineLayer);
+            Map.Children.Add(PolyLineLayer); // Adds the PolyLineLayer to the main Map as a child
         }
-
+        
+        // Opens a file dialog where you can select a CSV file
         private void ImportBtn_OnClick(object sender, RoutedEventArgs e) {
             var ofd = new OpenFileDialog {
                 Filter = "CSV Files (*.csv)|*.csv|All Files (*.*)|*.*",
@@ -51,11 +53,10 @@ namespace BingMapsViewer {
 
             var result = ofd.ShowDialog();
 
-            if (result != false) {
+            if (result != false) { // If file is selected, start data import and disable ImportBtn
                 ImportData(ofd.FileName);
+                ImportBtn.IsEnabled = false;
             }
-
-            ImportBtn.IsEnabled = false;
         }
 
         /*
@@ -145,6 +146,7 @@ namespace BingMapsViewer {
             DrawLines();
         }
 
+        // Returns the distance (in metric meters) between two locations
         public static double CalculateDistance(Location previousPin, Location currentPin) {
             var firstCoordinate = new GeoCoordinate(previousPin.Longitude, previousPin.Latitude);
             var secondCoordinate = new GeoCoordinate(currentPin.Longitude, currentPin.Latitude);
@@ -153,14 +155,16 @@ namespace BingMapsViewer {
             return firstCoordinate.GetDistanceTo(secondCoordinate);
         }
 
+        // Clears the pin collection, clears the PolyLineLayer childrens(Map lines) and removes the PolyLineLayer as a child of the main Map
         private void ClearBtn_OnClick(object sender, RoutedEventArgs e) {
             PushPinCollection.Clear();
             PolyLineLayer.Children.Clear();
             Map.Children.Remove(PolyLineLayer);
 
-            ImportBtn.IsEnabled = true;
+            ImportBtn.IsEnabled = true; // Renables the ImportBtn because now the user may import data again
         }
 
+        // Closes the program
         private void ExitBtn_OnClick(object sender, RoutedEventArgs e) {
             Close();
         }
