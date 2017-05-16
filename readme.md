@@ -126,6 +126,23 @@ public class Datapoint {
 }
 ```
 
+Bilag:
+------
+
+I brug:
+
+![img 1](http://cdn.wejlgaard.com/3.jpg)
+
+Diagram:
+
+![img 2](http://cdn.wejlgaard.com/diagram.png)
+
+Inputs:
+
+![img 3](http://cdn.wejlgaard.com/sockets.jpg)
+
+
+
 Krav:
--------------------
+-----
 Bing SDK: https://msdn.microsoft.com/da-dk/library/hh750210.aspx
