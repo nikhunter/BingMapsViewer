@@ -87,6 +87,8 @@ Så et eksempel af log data vil se ud som efterfølgende.
 0,21,-1,1,-2
 ```
 
+Et af vores eksempeler kan hentes her: https://www.dropbox.com/s/z8x478vfuacl9lo/DAT00004.CSV?dl=0
+
 Som vi kan se i eksemplet er linje 1’s data type `0x10C` dvs. at 1095 er motoren RPM og det tog 174 ms at få værdien.
 
 På linje 6 kan vi også se at data typen er `0x20` dvs. accelerometer, så den har 3 værdier, X,Y og Z.
@@ -140,8 +142,6 @@ Diagram:
 Inputs:
 
 ![img 3](http://cdn.wejlgaard.com/sockets.jpg)
-
-
 
 Krav:
 -----
