@@ -73,18 +73,23 @@ namespace BingMapsViewer {
             for (var i = 0; i < lines.Length;) {
                 var data = lines[i].Split(',');
                 if (data[1] == "10C") {
+                    // Count used for running through next lines until the next 0x10c
                     var count = 1;
 
+                    // Initialization of variables used for pin information
                     var rpm = int.Parse(data[2]);
                     var speed = 0;
                     double lat = 0;
                     double lng = 0;
                     var time = "";
 
+
                     try {
+                        // Check if file starts by logging RPM (0x10c)
                         while (lines[i + count].Split(',')[1] != "10C") {
                             data = lines[i + count].Split(',');
 
+                            // Fill previously declared variables with corresponding data
                             switch (data[1]) {
                                 case "10D":
                                     speed = int.Parse(data[2]);
@@ -124,8 +129,12 @@ namespace BingMapsViewer {
                         break;
                     }
 
+                    // If dataset doesn't have gps coordinates, discard it
                     if (lng != 0 && lat != 0) {
                         // TODO Make this threshold check prettier
+
+                        // if distance is greater than 10 meter and under 1000, set a pin, otherwise it's too close or a GPS glitch
+                        // Magic numbers for now but, easily could be replaced with actual variables
                         if (PushPinCollection.Count > 0 &&
                             CalculateDistance(PushPinCollection[PushPinCollection.Count - 1].Location,
                                 new Location(lat, lng)) > 100 &&
@@ -145,11 +154,12 @@ namespace BingMapsViewer {
             DrawLines();
         }
 
+        // return distance in meters between gps coordinates
         public static double CalculateDistance(Location previousPin, Location currentPin) {
             var firstCoordinate = new GeoCoordinate(previousPin.Longitude, previousPin.Latitude);
             var secondCoordinate = new GeoCoordinate(currentPin.Longitude, currentPin.Latitude);
 
-            // Returns distance in meters
+            // Returns distance
             return firstCoordinate.GetDistanceTo(secondCoordinate);
         }
 
