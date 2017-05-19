@@ -144,7 +144,7 @@ namespace BingMapsViewer {
                     {
                         // TODO Make this threshold check prettier
 
-                        // if distance is greater than 10 meter and under 1000, set a pin, otherwise it's too close or a GPS glitch
+                        // if distance is greater than 100 meter and under 1000, set a pin, otherwise it's too close or a GPS glitch
                         // Magic numbers for now but, easily could be replaced with actual variables
                         if (PushPinCollection.Count > 0 &&
                             CalculateDistance(PushPinCollection[PushPinCollection.Count - 1].Location,
@@ -169,11 +169,16 @@ namespace BingMapsViewer {
 
         // Returns the distance (in metric meters) between two locations
         public static double CalculateDistance(Location previousPin, Location currentPin) {
-            var firstCoordinate = new GeoCoordinate(previousPin.Longitude, previousPin.Latitude);
-            var secondCoordinate = new GeoCoordinate(currentPin.Longitude, currentPin.Latitude);
+            try {
+                var firstCoordinate = new GeoCoordinate(previousPin.Longitude, previousPin.Latitude);
+                var secondCoordinate = new GeoCoordinate(currentPin.Longitude, currentPin.Latitude);
 
-            // Returns distance in meters
-            return firstCoordinate.GetDistanceTo(secondCoordinate);
+                // Returns distance in meters
+                return firstCoordinate.GetDistanceTo(secondCoordinate);
+            }
+            catch (Exception) {
+                return 0; // If returned 0, aka under 100 meters it will not add the pin because something went wrong
+            }
         }
 
         // Clears the pin collection, clears the PolyLineLayer childrens(Map lines) and removes the PolyLineLayer as a child of the main Map
