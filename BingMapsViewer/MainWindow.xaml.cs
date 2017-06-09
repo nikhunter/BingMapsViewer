@@ -78,12 +78,12 @@ namespace BingMapsViewer {
                             var logs = row["log_file"].ToString();
 
                             // TODO Fetch coordinates of first and last 'result'
-                            List<RootObject> results = JsonConvert.DeserializeObject<List<RootObject>>(logs);
+                            List<RavenObject> results = JsonConvert.DeserializeObject<List<RavenObject>>(logs);
 
-                            int lineCount = 1;
+                            var lineCount = 1;
                             foreach (var line in results) {
-                                double lat = double.Parse(line.Latitude, CultureInfo.InvariantCulture);
-                                double lng = double.Parse(line.Longitude, CultureInfo.InvariantCulture);
+                                var lat = double.Parse(line.Latitude, CultureInfo.InvariantCulture);
+                                var lng = double.Parse(line.Longitude, CultureInfo.InvariantCulture);
                                 var date = line.Date;
                                 var time = line.Time;
                                 var speed = int.Parse(line.Speed);
@@ -119,16 +119,15 @@ namespace BingMapsViewer {
         // Opens a file dialog where you can select a CSV file
         private void ImportFromFileBtn_OnClick(object sender, RoutedEventArgs e) {
             var ofd = new OpenFileDialog {
-                Filter = "CSV Files (*.csv)|*.csv|All Files (*.*)|*.*",
+                Filter = "Supported Files (*.csv, *.json)|*.csv;*.json|All Files (*.*)|*.*"
             };
 
             var result = ofd.ShowDialog();
 
-            if (result != false) {
-                // If file is selected, start data import and disable ImportBtn
-                ImportData(ofd.FileName);
-                ImportFromFileBtn.IsEnabled = false;
-            }
+            if (result == false) return;
+            // If file is selected, start data import and disable ImportBtn
+            ImportData(ofd.FileName);
+            ImportFromFileBtn.IsEnabled = false;
         }
 
         /*
@@ -141,94 +140,131 @@ namespace BingMapsViewer {
             Date    =   11
         */
         private void ImportData(string file) {
-            // load each file line into array as element
-            var lines = File.ReadAllLines(file);
-            var date = "";
-            for (var i = 0; i < lines.Length;) {
-                // splits line into array, datatype on [1], value on [2]
-                var data = lines[i].Split(',');
-                if (data[1] == "10C") {
-                    // Count used for running through next lines until the next 0x10c
-                    var count = 1;
+            switch (Path.GetExtension(file)) {
+                case ".csv": {
+                    // load each file line into array as element
+                    var lines = File.ReadAllLines(file);
+                    var date = "";
+                    for (var i = 0; i < lines.Length;) {
+                        // splits line into array, datatype on [1], value on [2]
+                        var data = lines[i].Split(',');
+                        if (data[1] == "10C") {
+                            // Count used for running through next lines until the next 0x10c
+                            var count = 1;
 
-                    // Initialization of variables used for pin information
-                    var rpm = int.Parse(data[2]);
-                    var speed = 0;
-                    double lat = 0;
-                    double lng = 0;
-                    var time = "";
+                            // Initialization of variables used for pin information
+                            var rpm = int.Parse(data[2]);
+                            var speed = 0;
+                            double lat = 0;
+                            double lng = 0;
+                            var time = "";
 
-                    try {
-                        // Check if file starts by logging RPM (0x10c)
-                        while (lines[i + count].Split(',')[1] != "10C") {
-                            data = lines[i + count].Split(',');
+                            try {
+                                // Check if file starts by logging RPM (0x10c)
+                                while (lines[i + count].Split(',')[1] != "10C") {
+                                    data = lines[i + count].Split(',');
 
-                            // Fill previously declared variables with corresponding data
-                            switch (data[1]) {
-                                case "10D":
-                                    speed = int.Parse(data[2]);
-                                    break;
-                                case "A":
-                                    lat = double.Parse(Convert
-                                        .ToDecimal(data[2].Insert(2, "."), new CultureInfo("en-US"))
-                                        .ToString());
-                                    break;
-                                case "B":
-                                    lng = double.Parse(Convert
-                                        .ToDecimal(data[2].Insert(2, "."), new CultureInfo("en-US"))
-                                        .ToString());
-                                    break;
-                                case "10": // TODO Make this Time extract prettier
-                                    var hour = int.Parse(data[2].Substring(0, 2));
-                                    var minute = int.Parse(data[2].Substring(2, 2));
-                                    var second = int.Parse(data[2].Substring(4, 2));
-                                    hour = hour + 2; // TimeZone correction
+                                    // Fill previously declared variables with corresponding data
+                                    switch (data[1]) {
+                                        case "10D":
+                                            speed = int.Parse(data[2]);
+                                            break;
+                                        case "A":
+                                            lat = double.Parse(Convert
+                                                .ToDecimal(data[2].Insert(2, "."), new CultureInfo("en-US"))
+                                                .ToString());
+                                            break;
+                                        case "B":
+                                            lng = double.Parse(Convert
+                                                .ToDecimal(data[2].Insert(2, "."), new CultureInfo("en-US"))
+                                                .ToString());
+                                            break;
+                                        case "10": // TODO Make this Time extract prettier
+                                            var hour = int.Parse(data[2].Substring(0, 2));
+                                            var minute = int.Parse(data[2].Substring(2, 2));
+                                            var second = int.Parse(data[2].Substring(4, 2));
+                                            hour = hour + 2; // TimeZone correction
 
-                                    time = $"{hour:D2}:{minute:D2}:{second:D2}";
-                                    break;
-                                case "11": // TODO Make this Date extract prettier
-                                    var day = data[2].Substring(0, 2);
-                                    var month = data[2].Substring(2, 2);
-                                    var year = data[2].Substring(4, 2);
+                                            time = $"{hour:D2}:{minute:D2}:{second:D2}";
+                                            break;
+                                        case "11": // TODO Make this Date extract prettier
+                                            var day = data[2].Substring(0, 2);
+                                            var month = data[2].Substring(2, 2);
+                                            var year = data[2].Substring(4, 2);
 
-                                    date = $"{day}/{month}/{year}";
-                                    break;
+                                            date = $"{day}/{month}/{year}";
+                                            break;
+                                    }
+
+                                    count++;
+                                }
+                            }
+                            catch (IndexOutOfRangeException) {
+                                // import is probably at the end of the file, so we escape the loop here
+                                break;
                             }
 
-                            count++;
+                            // If dataset doesn't have gps coordinates, discard it
+                            if (lng != 0 && lat != 0) {
+                                // TODO Make this threshold check prettier
+
+                                // if distance is greater than 100 meter and under 1000, set a pin, otherwise it's too close or a GPS glitch
+                                // Magic numbers for now but, easily could be replaced with actual variables
+                                if (PushPinCollection.Count > 0 &&
+                                    CalculateDistance(PushPinCollection[PushPinCollection.Count - 1].Location,
+                                        new Location(lat, lng)) > 100 &&
+                                    CalculateDistance(PushPinCollection[PushPinCollection.Count - 1].Location,
+                                        new Location(lat, lng)) < 1000) {
+                                    PushPinCollection.Add(new Datapoint(new Location(lat, lng), date, time, speed,
+                                        rpm));
+                                }
+                                else if (PushPinCollection.Count == 0) {
+                                    PushPinCollection.Add(
+                                        new Datapoint(new Location(lat, lng), date, time, speed, rpm));
+                                }
+                            }
+
+                            i += count;
                         }
                     }
-                    catch (IndexOutOfRangeException) {
-                        // import is probably at the end of the file, so we escape the loop here
-                        break;
-                    }
+                    DrawLines();
+                }
+                    break;
+                case ".json": {
+                    // TODO Fetch coordinates of first and last 'result'
+                    List<RavenObject> results =
+                        JsonConvert.DeserializeObject<List<RavenObject>>(File.ReadAllText(file));
 
-                    // If dataset doesn't have gps coordinates, discard it
-                    if (lng != 0 && lat != 0) {
-                        // TODO Make this threshold check prettier
+                    var lineCount = 1;
+                    foreach (var index in results) {
+                        var lat = double.Parse(index.Latitude, CultureInfo.InvariantCulture);
+                        var lng = double.Parse(index.Longitude, CultureInfo.InvariantCulture);
+                        var date = index.Date;
+                        var time = index.Time;
+                        var speed = int.Parse(index.Speed);
+                        var rpm = int.Parse(index.Rpm);
 
-                        // if distance is greater than 100 meter and under 1000, set a pin, otherwise it's too close or a GPS glitch
-                        // Magic numbers for now but, easily could be replaced with actual variables
                         if (PushPinCollection.Count > 0 &&
                             CalculateDistance(PushPinCollection[PushPinCollection.Count - 1].Location,
                                 new Location(lat, lng)) > 100 &&
                             CalculateDistance(PushPinCollection[PushPinCollection.Count - 1].Location,
                                 new Location(lat, lng)) < 1000) {
-                            PushPinCollection.Add(new Datapoint(new Location(lat, lng), date, time, speed, rpm));
+                            PushPinCollection.Add(new Datapoint(new Location(lat, lng), date, time, speed,
+                                rpm));
                         }
                         else if (PushPinCollection.Count == 0) {
                             PushPinCollection.Add(
                                 new Datapoint(new Location(lat, lng), date, time, speed, rpm));
                         }
+                        lineCount = lineCount + 1;
                     }
-
-                    i += count;
+                    DrawLines();
                 }
+                    break;
             }
-            DrawLines();
         }
 
-        public class RootObject {
+        public class RavenObject {
             [JsonProperty(PropertyName = "DeltaTime")]
             public string DeltaTime { get; set; }
 
