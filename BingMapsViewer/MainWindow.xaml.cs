@@ -246,9 +246,7 @@ namespace BingMapsViewer {
 
                         if (PushPinCollection.Count > 0 &&
                             CalculateDistance(PushPinCollection[PushPinCollection.Count - 1].Location,
-                                new Location(lat, lng)) > 100 &&
-                            CalculateDistance(PushPinCollection[PushPinCollection.Count - 1].Location,
-                                new Location(lat, lng)) < 1000) {
+                                new Location(lat, lng)) > 50) {
                             PushPinCollection.Add(new Datapoint(new Location(lat, lng), date, time, speed,
                                 rpm));
                         }
