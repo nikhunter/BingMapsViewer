@@ -114,12 +114,17 @@ namespace BingMapsViewer {
                                         .ToString());
                                     break;
                                 case "10": // TODO Make this Time extract prettier
-                                    var hour = int.Parse(data[2].Substring(0, 2));
-                                    var minute = int.Parse(data[2].Substring(2, 2));
-                                    var second = int.Parse(data[2].Substring(4, 2));
-                                    hour = hour + 2; // TimeZone correction
+                                    try {
+                                        var hour = int.Parse(data[2].Substring(0, 2));
+                                        var minute = int.Parse(data[2].Substring(2, 2));
+                                        var second = int.Parse(data[2].Substring(4, 2));
+                                        hour = hour + 2; // TimeZone correction
 
-                                    time = $"{hour:D2}:{minute:D2}:{second:D2}";
+                                        time = $"{hour:D2}:{minute:D2}:{second:D2}";
+                                    }
+                                    catch (Exception) {
+                                        // ignored
+                                    }
                                     break;
                                 case "11": // TODO Make this Date extract prettier
                                     var day = data[2].Substring(0, 2);
