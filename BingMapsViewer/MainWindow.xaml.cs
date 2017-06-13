@@ -231,8 +231,7 @@ namespace BingMapsViewer {
                 }
                     break;
                 case ".json": {
-                    // TODO Fetch coordinates of first and last 'result'
-                    List<RavenObject> results =
+                    var results =
                         JsonConvert.DeserializeObject<List<RavenObject>>(File.ReadAllText(file));
 
                     var lineCount = 1;
@@ -241,8 +240,13 @@ namespace BingMapsViewer {
                         var lng = double.Parse(index.Longitude, CultureInfo.InvariantCulture);
                         var date = index.Date;
                         var time = index.Time;
-                        var speed = int.Parse(index.Speed);
-                        var rpm = int.Parse(index.Rpm);
+                        var speed = 0;
+                        var rpm = 0;
+
+                        if (index.Speed != null || index.Rpm != null) {
+                            speed = int.Parse(index.Speed);
+                            rpm = int.Parse(index.Rpm);
+                        }
 
                         if (PushPinCollection.Count > 0 &&
                             CalculateDistance(PushPinCollection[PushPinCollection.Count - 1].Location,
